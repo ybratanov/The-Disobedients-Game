@@ -152,24 +152,24 @@ function startGame() {
     .image(80, screenHeight - 80, "leftArrow")
     .setInteractive({ useHandCursor: false })
     .setScrollFactor(0)
-    .setScale(0.1)
-    .setAlpha(0.6);
+    .setScale(0.15)
+    .setAlpha(0.85);
 
   // Дясна стрелка
   let rightBtn = sceneRef.add
     .image(180, screenHeight - 80, "rightArrow")
     .setInteractive({ useHandCursor: false })
     .setScrollFactor(0)
-    .setScale(0.1)
-    .setAlpha(0.6);
+    .setScale(0.15)
+    .setAlpha(0.85);
 
   // Скок
   let jumpBtn = sceneRef.add
     .image(screenWidth - 80, screenHeight - 80, "jumpArrow")
     .setInteractive({ useHandCursor: false })
     .setScrollFactor(0)
-    .setScale(0.2)
-    .setAlpha(0.6);
+    .setScale(0.25)
+    .setAlpha(0.85);
 
   if (!this.sys.game.device.os.android && !this.sys.game.device.os.iOS) {
     leftBtn.setVisible(false);
