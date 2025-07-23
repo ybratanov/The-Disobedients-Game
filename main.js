@@ -13,6 +13,18 @@ let leftPressed = false;
 let rightPressed = false;
 let jumpPressed = false;
 
+class Level1Scene extends Phaser.Scene {
+  constructor() {
+    super("Level1Scene");
+  }
+
+  preload() { preload.call(this); }
+  create() { create.call(this); }
+  update() { update.call(this); }
+}
+
+window.Level1Scene = Level1Scene;
+
 const config = {
   type: Phaser.AUTO,
   width: 800,
@@ -26,7 +38,8 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: { preload, create, update },
+  scene: [Level1Scene, Level2Scene, GameOverScene, EndScene]
+,
 };
 
 new Phaser.Game(config);
@@ -268,40 +281,30 @@ function finishLevel(scene) {
     .setInteractive()
     .setDepth(1);
 
-  nextLevelButton.on("pointerdown", () => {
-    // Скриваме бутоните
-    restartButton.setVisible(false);
-    nextLevelButton.setVisible(false);
-
-    // Показваме съобщение
-    const waitText = scene.add
-      .text(
-        400,
-        300,
-        "Моля за малко търпение...\nСледващите нива са в процес на изработка 😊",
-        {
+    nextLevelButton.on("pointerdown", () => {
+      restartButton.setVisible(false);
+      nextLevelButton.setVisible(false);
+    
+      const waitText = scene.add
+        .text(400, 300, "Зареждане на следващото ниво...", {
           fontSize: "24px",
           fill: "#00ff00",
           backgroundColor: "#000000",
           padding: { x: 20, y: 10 },
           align: "center",
-        }
-      )
-      .setOrigin(0.5)
-      .setDepth(1);
-
-    // След 6 секунди: трие се съобщението, появява се само Рестарт
-    scene.time.delayedCall(6000, () => {
-      waitText.destroy();
-      restartButton.setVisible(true);
+        })
+        .setOrigin(0.5)
+        .setDepth(1);
+    
+      scene.time.delayedCall(2000, () => {
+        scene.scene.start("Level2Scene");
+      });
     });
-  });
+  
 }
 
 function update() {
-  if (!gameStarted) return;
-
-  if (!gameStarted || !player || !cursors) return;
+  if (!gameStarted || !player || !player.body || !cursors) return;
 
   let moveX = 0;
 
@@ -323,13 +326,11 @@ function update() {
     player.setVelocityY(-550);
   }
 
-  // Скок за мобилен бутон
   if (jumpPressed && player.body.blocked.down) {
     player.setVelocityY(-550);
   }
-
-  if (!gameStarted || !player || !cursors) return;
 }
+
 
 function cleanupScene(scene) {
   if (restartButton) restartButton.destroy();
